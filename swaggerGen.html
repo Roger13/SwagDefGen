@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8"/>
+		<title>Swagger Generator</title>
+		<script src="swaggerGen.js" type="text/javascript"></script>
+		<style>
+			textarea{
+				display: inline-block;
+				margin: 10px;
+			}
+
+			button{
+				display: inline-block;
+			}
+		</style>
+	</head>
+	<body>
+		<h1>Swagger Definition Objects Generator</h1>
+		<p>Add your JSON mock to generate Swagger definition objects.</p>
+		<textarea id="JSON" rows="20" cols="55" placeholder="Type your JSON">
+{
+	"numbersMock": {
+		"smallInt": -20,
+		"bigInt": 2147483647,
+		"unsafeInt": 9999999999999999,
+		"notInt": 12.2
+	},
+	"stringsMock": {
+		"stringTest": "Hello World",
+		"isoDate": "1999-12-31",
+		"isoDateTime": "1999-12-31T23:59:59Z"
+	},
+	"objectsMock": {
+		"child": {"child": true},
+		"childList": [{"child": true}],
+		"childMatrix": [[{"child": true}]]
+	}
+}
+		</textarea>
+	  <button type="button" onclick="convert()">Convert</button>
+		<textarea readonly="true" id="Swagger" rows="20" cols="85" placeholder="Here is your Swagger"></textarea>
+	</body>
+</html>
