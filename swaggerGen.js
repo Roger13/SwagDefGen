@@ -1,6 +1,6 @@
 function convert () {
+  'use strict';
   var inJSON = document.getElementById("JSON").value;
-  var innerJSON;
   try {
     inJSON = JSON.parse(inJSON);
   } catch (e) {
@@ -27,7 +27,7 @@ function convert () {
     }
     //Update tabCount
     tabCount = count;
-  }
+  };
 
   function convertNumber (num) {
     if (num % 1 === 0) {
@@ -46,7 +46,7 @@ function convert () {
 
   //ISO8601 format - https://xml2rfc.tools.ietf.org/public/rfc/html/rfc3339.html#anchor14
   function convertDate (str) {
-    regxDate = /^(19|20)\d{2}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/;
+    let regxDate = /^(19|20)\d{2}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/,
     regxDateTime = /^(19|20)\d{2}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01]).([0-1][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\.[0-9]{1,2})?(Z|(\+|\-)([0-1][0-9]|2[0-3]):[0-5][0-9])$/;
     if (regxDateTime.test(str)) {
         outSwagger += ','
@@ -76,7 +76,7 @@ function convert () {
     }
     changeIndentation(tabCount - 1);
     outSwagger += indentator + '}';
-  }
+  };
 
   function convertObject (obj) {
     // ---- Begin properties scope ----
@@ -117,27 +117,21 @@ function convert () {
       alert("Cannot fetch a type for null attributes!\n(" + e + ")");
       return;
     }
-  }
+  };
 
-  //While there are objects inside the JSON
-  while (Object.keys(inJSON).length > 0) {
-    changeIndentation(1);
-    //Holds objects inside attributes
-    innerJSON = {};
-    //For each object inside the JSON
-    for (var obj in inJSON) {
-      if (typeof inJSON[obj] === "object") {
-          // ---- Begin object scope ----
-          outSwagger += indentator + '"' + obj + '": {'
-          changeIndentation(tabCount+1);
-          convertObject(inJSON[obj], obj);
-          // ---- End object scope ----
-          changeIndentation(tabCount-1);
-          outSwagger += indentator + '},';
-      }
+  //Execution begins here
+  changeIndentation(1);
+  //For each object inside the JSON
+  for (var obj in inJSON) {
+    if (typeof inJSON[obj] === "object") {
+        // ---- Begin object scope ----
+        outSwagger += indentator + '"' + obj + '": {'
+        changeIndentation(tabCount+1);
+        convertObject(inJSON[obj], obj);
+        // ---- End object scope ----
+        changeIndentation(tabCount-1);
+        outSwagger += indentator + '},';
     }
-    //Refresh JSON with newly added objects and remove old ones
-    inJSON = innerJSON;
   }
   //Remove last comma
   outSwagger = outSwagger.substring(0, outSwagger.length - 1);
