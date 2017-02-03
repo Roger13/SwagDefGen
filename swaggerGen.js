@@ -123,12 +123,16 @@ function convert () {
   changeIndentation(1);
   //For each object inside the JSON
   for (var obj in inJSON) {
-    if (typeof inJSON[obj] === "object") {
+	if (typeof inJSON[obj] === "object") {
         // ---- Begin object scope ----
         outSwagger += indentator + '"' + obj + '": {'
         changeIndentation(tabCount+1);
-        convertObject(inJSON[obj], obj);
-        // ---- End object scope ----
+		if (Object.prototype.toString.call(inJSON[obj]) === '[object Array]') {
+			convertArray(inJSON[obj][0], obj);
+    	} else {
+        	convertObject(inJSON[obj], obj);
+        }
+		// ---- End object scope ----
         changeIndentation(tabCount-1);
         outSwagger += indentator + '},';
     }
