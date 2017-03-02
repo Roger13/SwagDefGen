@@ -1,4 +1,4 @@
-function convert () {
+function convert() {
   'use strict';
   var inJSON = document.getElementById("JSON").value;
   try {
@@ -79,6 +79,12 @@ function convert () {
   };
 
   function convertObject (obj) {
+    //Convert null attributes to given type
+    if (obj === null) {
+      outSwagger += indentator + '"type": "' + document.getElementById("nullType").value + '",';
+      outSwagger += indentator + '"format": "nullable",';
+      return;
+    }
     // ---- Begin properties scope ----
     outSwagger += indentator + '"type": "object",'
     outSwagger += indentator + '"properties": {';
@@ -106,16 +112,11 @@ function convert () {
     }
 
     changeIndentation(tabCount - 1);
-    try { // ---- End properties scope ----
-      if (Object.keys(obj).length > 0) { //At least 1 property inserted
-        outSwagger = outSwagger.substring(0, outSwagger.length - 1); //Remove last comma
-        outSwagger += indentator + '}'
-      } else { // No property inserted
-        outSwagger += ' }';
-      }
-    } catch (e) {
-      alert("Cannot fetch a type for null attributes!\n(" + e + ")");
-      return;
+    if (Object.keys(obj).length > 0) { //At least 1 property inserted
+      outSwagger = outSwagger.substring(0, outSwagger.length - 1); //Remove last comma
+      outSwagger += indentator + '}'
+    } else { // No property inserted
+      outSwagger += ' }';
     }
   };
 
@@ -124,17 +125,17 @@ function convert () {
   //For each object inside the JSON
   for (var obj in inJSON) {
 	if (typeof inJSON[obj] === "object") {
-        // ---- Begin object scope ----
-        outSwagger += indentator + '"' + obj + '": {'
-        changeIndentation(tabCount+1);
+    // ---- Begin object scope ----
+    outSwagger += indentator + '"' + obj + '": {'
+    changeIndentation(tabCount+1);
 		if (Object.prototype.toString.call(inJSON[obj]) === '[object Array]') {
 			convertArray(inJSON[obj][0], obj);
-    	} else {
-        	convertObject(inJSON[obj], obj);
-        }
+    } else {
+      convertObject(inJSON[obj], obj);
+    }
 		// ---- End object scope ----
-        changeIndentation(tabCount-1);
-        outSwagger += indentator + '},';
+    changeIndentation(tabCount-1);
+    outSwagger += indentator + '},';
     }
   }
   //Remove last comma
