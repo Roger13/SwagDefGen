@@ -64,7 +64,10 @@ function convert() {
 
     if (typeof obj === "number") { //attribute is a number
       convertNumber(obj);
-    } else if (Object.prototype.toString.call(obj) === '[object Array]') { //attribute is an array
+      if (document.getElementById("requestExamples").checked) { 
+            outSwagger += "," + indentator + '"description": "Ex: ' + obj + '"';
+      }
+	} else if (Object.prototype.toString.call(obj) === '[object Array]') { //attribute is an array
       convertArray(obj[0]);
     } else if (typeof obj === "object"){ //attribute is an object
       convertObject(obj);
@@ -73,6 +76,10 @@ function convert() {
       if (typeof obj === "string") {
         convertDate(obj);
       }
+	  if (document.getElementById("requestExamples").checked) { 
+            outSwagger += "," + indentator + '"description": "Ex: ' + obj + '"';
+      }
+
     }
     changeIndentation(tabCount - 1);
     outSwagger += indentator + '}';
@@ -82,7 +89,7 @@ function convert() {
     //Convert null attributes to given type
     if (obj === null) {
       outSwagger += indentator + '"type": "' + document.getElementById("nullType").value + '",';
-      outSwagger += indentator + '"format": "nullable",';
+      outSwagger += indentator + '"format": "nullable"';
       return;
     }
     // ---- Begin properties scope ----
@@ -96,7 +103,10 @@ function convert() {
       changeIndentation(tabCount + 1);
       if (typeof obj[prop] === "number") { //attribute is a number
         convertNumber(obj[prop]);
-      } else if (Object.prototype.toString.call(obj[prop]) === '[object Array]') { //attribute is an array
+      	if (document.getElementById("requestExamples").checked) { 
+            outSwagger += "," + indentator + '"description": "Ex: ' + obj[prop] + '"';
+        }
+	  } else if (Object.prototype.toString.call(obj[prop]) === '[object Array]') { //attribute is an array
         convertArray(obj[prop][0], prop);
       } else if (typeof obj[prop] === "object") { //attribute is an object
         convertObject(obj[prop], prop);
@@ -104,6 +114,9 @@ function convert() {
         outSwagger += indentator + '"type": "' + typeof obj[prop] + '"';
         if (typeof obj[prop] === "string") {
           convertDate(obj[prop]);
+        }
+		if (document.getElementById("requestExamples").checked) { 
+            outSwagger += "," + indentator + '"description": "Ex: ' + obj[prop] + '"';
         }
       }
       // ---- End property type scope ----
