@@ -6,3 +6,4 @@ This is a tool to help building Swagger documentations. It converts JSON request
 * Detects date and date-time formats according to [ISO 8601](https://xml2rfc.tools.ietf.org/public/rfc/html/rfc3339.html#anchor14)
 * Allows nested objects and arrays
 * Supports nullable fields
+* Feature to add mock values as example in description
