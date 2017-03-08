@@ -4,6 +4,21 @@
 		<meta charset="UTF-8"/>
 		<title>Swagger Generator</title>
 		<script src="swaggerGen.js" type="text/javascript"></script>
+		<script>
+			function init() {
+				//Handle tabs inside JSON textarea
+				let txtArea = document.getElementById('JSON');
+				txtArea.onkeydown = function(e){
+					if(e.keyCode==9 || e.which==9){
+					    e.preventDefault();
+					    let s = this.selectionStart;
+					    this.value = this.value.substring(0,this.selectionStart) + "\t" + this.value.substring(this.selectionEnd);
+					    this.selectionEnd = s+1; 
+					}
+				}
+			};
+			
+		</script>
 		<style>
 			textarea{
 				display: inline-block;
@@ -15,7 +30,7 @@
 			}
 		</style>
 	</head>
-	<body>
+	<body onload="init();">
 		<h1>Swagger Definition Objects Generator</h1>
 		<p>Add your JSON mock to generate Swagger definition objects.</p>
 		<textarea id="JSON" rows="20" cols="55" placeholder="Type your JSON">
