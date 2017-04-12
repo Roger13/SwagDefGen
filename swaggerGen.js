@@ -151,7 +151,7 @@ function convert() {
 
   function format(value, yaml) {
     if (yaml) {
-      return value.replace(/[{},"]+/g, '').replace(/\t/g, '  ').replace(/(^[ \t]*\n)/gm, "");
+      return value.replace(/[{},"]+/g, '').replace(/\t/g, '  ').replace(/(^ *\n)/gm, '');
     } else {
       return value
     }
