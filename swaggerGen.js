@@ -70,7 +70,7 @@ function convert() {
         outSwagger += indentator + '"type": "number"';
     }
 	if (document.getElementById("requestExamples").checked) { //Log example if checkbox is checked 
-        outSwagger += "," + indentator + '"description": "Ex: ' + num + '"';
+        outSwagger += "," + indentator + '"example": "' + num + '"';
     }
 
   };
@@ -95,7 +95,7 @@ function convert() {
         outSwagger += indentator + '"format": "date"';
     }
 	if (document.getElementById("requestExamples").checked) { //Log example if checkbox is checked 
-        outSwagger += "," + indentator + '"description": "Ex: ' + str + '"';
+        outSwagger += "," + indentator + '"example": "' + str + '"';
     }
   };
 
