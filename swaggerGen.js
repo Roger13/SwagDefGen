@@ -148,6 +148,14 @@ function convert() {
       outSwagger += ' }';
     }
   };
+
+  function format(value, yaml) {
+    if (yaml) {
+      return value.replace(/[{},"]+/g, '').replace(/\t/g, '  ').replace(/(^[ \t]*\n)/gm, "");
+    } else {
+      return value
+    }
+  } 
   
   // ---- Execution begins here ----
   inJSON = document.getElementById("JSON").value;
@@ -178,5 +186,6 @@ function convert() {
   changeIndentation(tabCount-1);
   outSwagger += indentator + '}';
 
-  document.getElementById("Swagger").value = outSwagger;
+  var yaml = document.getElementById("YAML").checked;
+  document.getElementById("Swagger").value = format(outSwagger, yaml);
 }
