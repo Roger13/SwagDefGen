@@ -1,7 +1,8 @@
 function convert() {
   'use strict';
-  var inJSON, outSwagger, tabCount, indentator
-; 	
+  // ---- Global variables ----
+  var inJSON, outSwagger, tabCount, indentator;
+ 	
   // ---- Functions definitions ----
   function changeIndentation (count) {
 	/* 
@@ -57,7 +58,7 @@ function convert() {
     -outSwagger
     */
 
-	if (num % 1 === 0) {
+	if (num % 1 === 0 && !document.getElementById("noInt").checked) {
         outSwagger += indentator + '"type": "integer",';
         if (num < 2147483647 && num > -2147483647) {
           outSwagger += indentator + '"format": "int32"';
@@ -150,6 +151,11 @@ function convert() {
   };
 
   function format(value, yaml) {
+	/*
+	Convert JSON to YAML if yaml checkbox is checked
+	Global variables updated:
+	NONE
+	*/
     if (yaml) {
       return value.replace(/[{},"]+/g, '').replace(/\t/g, '  ').replace(/(^ *\n)/gm, '');
     } else {
@@ -186,6 +192,6 @@ function convert() {
   changeIndentation(tabCount-1);
   outSwagger += indentator + '}';
 
-  var yaml = document.getElementById("YAML").checked;
-  document.getElementById("Swagger").value = format(outSwagger, yaml);
+
+  document.getElementById("Swagger").value = format(outSwagger, document.getElementById("yamlOut").checked);
 }
