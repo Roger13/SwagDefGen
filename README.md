@@ -1,6 +1,3 @@
-![MIT Licence](https://badges.frapsoft.com/os/mit/mit.svg?v=102)
-![Open Source Love](https://badges.frapsoft.com/os/v1/open-source.png?v=103)
-
 # [SwagDefGen](https://roger13.github.io/SwagDefGen)
 This is a tool to help building Swagger documentations. It converts JSON request/response mocks to Swagger definitions.
 * Supports all swagger types
