@@ -1,39 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8"/>
-		<title>Swagger Generator</title>
-		<script src="swaggerGen.js" type="text/javascript"></script>
-		<script>
-			function init() {
-				//Handle tabs inside JSON textarea
-				let txtArea = document.getElementById('JSON');
-				txtArea.onkeydown = function(e){
-					if(e.keyCode==9 || e.which==9){
-					    e.preventDefault();
-					    let s = this.selectionStart;
-					    this.value = this.value.substring(0,this.selectionStart) + "\t" + this.value.substring(this.selectionEnd);
-					    this.selectionEnd = s+1; 
-					}
-				}
-			};
-			
-		</script>
-		<style>
-			textarea{
-				display: inline-block;
-				margin: 10px;
-			}
 
-			button{
-				display: inline-block;
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport">
+	<title>Swagger Generator</title>
+	<script src="swaggerGen.js" type="text/javascript"></script>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Fira+Code&display=swap" rel="stylesheet">
+
+	<script>
+		function init() {
+			//Handle tabs inside JSON textarea
+			let txtArea = document.getElementById('JSON');
+			txtArea.onkeydown = function (e) {
+				if (e.keyCode == 9 || e.which == 9) {
+					e.preventDefault();
+					let s = this.selectionStart;
+					this.value = this.value.substring(0, this.selectionStart) + "\t" + this.value.substring(this.selectionEnd);
+					this.selectionEnd = s + 1;
+				}
 			}
-		</style>
-	</head>
-	<body onload="init();">
-		<h1>Swagger Definition Objects Generator</h1>
-		<p>Add your JSON mock to generate Swagger definition objects.</p>
-		<textarea id="JSON" rows="20" cols="55" placeholder="Type your JSON">
+		};
+
+	</script>
+	<style>
+		textarea {
+			display: inline-block;
+			margin: 10px;
+		}
+
+		button {
+			display: inline-block;
+		}
+	</style>
+</head>
+
+<body onload="init();" class="container">
+	<h1 class="mt-3">Swagger Definition Objects Generator</h1>
+	<p>Add your JSON mock to generate Swagger definition objects.</p>
+	<div class="row">
+		<div class="col">
+			<textarea id="JSON" rows="20" cols="55" placeholder="Type your JSON" class="form-control"
+				style="font-family: 'Fira Code', monospace;">
 {
 	"numbersMock": {
 		"smallInt": -20,
@@ -53,23 +65,47 @@
 		"nullable": null
 	}
 }
-		</textarea>
-	  <button type="button" onclick="convert()">Convert</button>
-		<textarea readonly id="Swagger" rows="20" cols="85" placeholder="Here is your Swagger"></textarea>
-		<br>
-		<p>Add values as examples: <input type="checkbox" id="requestExamples"></p>
-		<p>Convert integer values to number: <input type="checkbox" id="noInt"></p>
-		<p>Convert null values to:
-			<select id="nullType">
-		  		<option value="string" selected="">String</option>
-		  		<option value="number">Number</option>
+							</textarea>
+		</div>
+		<div class="col">
+			<textarea readonly id="Swagger" rows="20" cols="85" placeholder="Here is your Swagger"
+				style="font-family: 'Fira Code', monospace;" class="form-control"></textarea>
+		</div>
+	</div>
+	<div class="my-1 text-center">
+		<button type="button" onclick="convert()" class="btn btn-success">Convert</button>
+	</div>
+	<br>
+	<div class="form-check">
+		<input type="checkbox" class="form-check-input" value="" id="requestExamples">
+		<label for="requestExamples" class="form-check-label">Add values as examples</label>
+	</div>
+	<div class="form-check mb-2">
+		<input type="checkbox" class="form-check-input" id="noInt">
+		<label for="noInt" class="form-check-label">Convert integer values to number</label>
+	</div>
+	<div class="row text-center">
+		<div class="col-6 mb-2">
+			<select id="nullType" class="form-select">
+				<option selected value="">Convert null values to:</option>
+				<option value="string">String</option>
+				<option value="number">Number</option>
 				<option value="integer">Integer</option>
 				<option value="boolean">Boolean</option>
 			</select>
-		</p>
-		<p>Output as YAML: <input type="checkbox" id="yamlOut"></p>	
-		<hr>
-		<p>Feel like collaborating? Clone the repository at <a target="_blank" href="https://github.com/Roger13/SwaggerGenerator">GitHub</a></p>
+		</div>
+	</div>
+	<!-- <p>Output as YAML: <input type="checkbox" id="yamlOut"></p> -->
+	<div class="form-check">
+		<input type="checkbox" class="form-check-input" id="yamlOut" checked>
+		<label for="yamlOut" class="form-check-label">Output as YAML</label>
+	</div>
+	<hr>
+	<p>Feel like collaborating? Clone the repository at <a target="_blank"
+			href="https://github.com/Roger13/SwaggerGenerator">GitHub</a></p>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8"
+		crossorigin="anonymous"></script>
+</body>
 
-	</body>
 </html>
