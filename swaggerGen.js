@@ -117,9 +117,11 @@ function convert() {
     -outSwagger
     */
     let schema = {};
+    let examples = new Set();
     for (const entry of obj) {
       for (const key of Object.keys(entry)) {
         if (!Object.keys(schema).includes(key)) {
+          examples.add(entry);
           schema[key] = entry[key];
         }
       }
@@ -131,6 +133,15 @@ function convert() {
     conversorSelection(schema);
     outSwagger += indentator + "}";
     // ---- End items scope ----
+    // ---- Begin example scope ----
+    if (document.getElementById("requestExamples").checked) {
+      console.log(examples);
+      outSwagger +=
+        "," +
+        indentator +
+        '"example": ' +
+        JSON.stringify(Array.from(examples), null, "\t");
+    }
   }
 
   function convertObject(obj) {
