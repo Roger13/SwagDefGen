@@ -141,6 +141,7 @@ function convert() {
       ).replaceAll('\n', indentator)
     }
     // ---- End example scope ----
+  }
 
   function convertObject(obj) {
     /* 
@@ -233,3 +234,4 @@ function convert() {
     document.getElementById("yamlOut").checked
   );
 }
+
