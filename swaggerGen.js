@@ -135,14 +135,12 @@ function convert() {
     // ---- End items scope ----
     // ---- Begin example scope ----
     if (document.getElementById("requestExamples").checked) {
-      console.log(examples);
-      outSwagger +=
-        "," +
-        indentator +
-        '"example": ' +
-        JSON.stringify(Array.from(examples), null, "\t");
+      outSwagger += ","
+      outSwagger += indentator + '"example": ' + JSON.stringify(
+        Array.from(examples), null, '\t'
+      ).replaceAll('\n', indentator)
     }
-  }
+    // ---- End example scope ----
 
   function convertObject(obj) {
     /* 
