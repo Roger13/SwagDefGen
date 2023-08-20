@@ -17,7 +17,6 @@
 					}
 				}
 			};
-			
 		</script>
 		<style>
 			textarea{
@@ -72,4 +71,28 @@
 		<p>Feel like collaborating? Clone the repository at <a target="_blank" href="https://github.com/Roger13/SwaggerGenerator">GitHub</a></p>
 
 	</body>
+	<script>
+		const options = ['requestExamples', 'noInt', 'nullType', 'yamlOut']
+		options.forEach(
+			option => document.getElementById(option).addEventListener("change", (event) => {
+				if (event.target.type === 'checkbox' ) {
+					if (!event.target.checked) {
+						return localStorage.removeItem(option)
+					}
+					return localStorage.setItem(option, 1)
+				}
+				return localStorage.setItem(option, event.target.value);		
+			})
+		)
+		options.forEach(
+			option => {
+				const value = localStorage.getItem(option)
+				const input = document.getElementById(option)
+
+				if (value === null || !input) return
+				if (input.type === 'checkbox') return input.checked = true 
+				return input.value = value
+			}
+		)
+	</script>
 </html>
