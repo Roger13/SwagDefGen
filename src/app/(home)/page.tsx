@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
+import checkJson from '@/lib/utils/checkJson'
 import { FormEvent, useState } from 'react'
 
 type ConvertNull = 'null' | 'string' | 'number' | 'integer' | 'boolean'
@@ -20,6 +21,9 @@ export default function Home() {
     event.preventDefault()
     setOutputValue(inputValue)
     console.log(convertNull)
+
+    const output = checkJson(inputValue)
+    setOutputValue(output)
   }
   
   return (
