@@ -1,31 +1,36 @@
 'use client'
 
-import CodeEditor from '@uiw/react-textarea-code-editor/nohighlight'
+import CodeEditor from '@uiw/react-textarea-code-editor'
 import JsonView from '@uiw/react-json-view'
+import '@uiw/react-textarea-code-editor/dist.css'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select'
-import checkJson from '@/lib/utils/checkJson'
 import { FormEvent, useState } from 'react'
+import checkJson from '@/lib/utils/checkJson'
+import { jsonToSwagger } from '@/lib/utils/jsonToSwagger'
 
-type ConvertNull = 'null' | 'string' | 'number' | 'integer' | 'boolean'
+type ConvertNullToType = 'string' | 'number' | 'integer' | 'boolean'
 
 export default function Home() {
+  const [convertNullToType, setConvertNullToType]
+    = useState<ConvertNullToType>('boolean')
   const [inputValue, setInputValue] = useState<string>('')
-  const [outputValue, setOutputValue] = useState<object>([])
-  const [convertNull, setConvertNull] = useState<ConvertNull>('null')
+  const [outputValue, setOutputValue] = useState<string>('')
   const [addExamples, setAddExamples] = useState(false)
   const [integerToNumber, setIntegerToNumber] = useState(false)
   const [outputYalm, setOutputYalm] = useState(false)
 
+
+
   function handleSubmit(event: FormEvent) {
     event.preventDefault()
-    console.log(convertNull)
-
-    const output = checkJson(inputValue)
+    const inputJson = checkJson(inputValue)
     
-    if (output) {
-      setOutputValue(output)
+    if (inputJson) {
+      const output = jsonToSwagger(inputJson, integerToNumber)
+      setOutputValue(JSON.parse(output))
+      console.log(JSON.parse(output))
     }
   }
   
@@ -42,7 +47,7 @@ export default function Home() {
         </header>
         <form onSubmit={handleSubmit}>
           <div className='flex gap-6 my-6 space-y-2'>
-            <Select onValueChange={(value: ConvertNull) => setConvertNull(value)}>
+            <Select onValueChange={(value: ConvertNullToType) => setConvertNullToType(value)}>
               <SelectTrigger className="w-full max-w-xs">
                 <SelectValue placeholder="Convert null values to" />
               </SelectTrigger>
@@ -88,7 +93,7 @@ export default function Home() {
             </div>
           </div>
           <div className='flex gap-6'>
-            <div className='w-full'>
+            <div className='w-full' data-color-mode="light">
               <h3 className='mb-2'>Input:</h3>
               <CodeEditor
                 style={{
@@ -109,15 +114,20 @@ export default function Home() {
             <div className='w-full'>
               <h3 className='mb-2'>Output:</h3>
               <JsonView
-                value={outputValue}
+                
+                enableClipboard={false}
+                displayDataTypes={false}
+                displayObjectSize={false}
+                typeof=''
+                value={Object(outputValue)}
                 className='resize-none'
                 style={{
                   height: 600,
+                  overflow: 'scroll',
                   background: 'none',
                   color: 'black',
                   border: '1px solid #ccc',
                   borderRadius: '0.5rem',
-                  padding: 10
                 }}
               />
             </div>

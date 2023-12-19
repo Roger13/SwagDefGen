@@ -22,6 +22,7 @@
         "react/prop-types": "off",
         "react/react-in-jsx-scope": "off",
         "no-useless-escape": "off",
+        "@typescript-eslint/no-explicit-any": "off",
         "indent": [
             "error",
             2
