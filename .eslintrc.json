@@ -21,6 +21,7 @@
     "rules": {
         "react/prop-types": "off",
         "react/react-in-jsx-scope": "off",
+        "no-useless-escape": "off",
         "indent": [
             "error",
             2
