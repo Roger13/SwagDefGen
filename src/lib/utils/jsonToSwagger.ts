@@ -74,7 +74,10 @@ export function jsonToSwagger(jsonData: any, integerToNumber: boolean): string {
         } else {
           swaggerDefinition[key] = {
             type: 'array',
-            items: { type: firstElementType },
+            items: { 
+              type: 'object',
+              properties: processObject(jsonData[key][0])
+            },
           }
         }
       } else {
