@@ -1,9 +1,10 @@
 'use client'
 
+import CodeEditor from '@uiw/react-textarea-code-editor/nohighlight'
+import JsonView from '@uiw/react-json-view'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Textarea } from '@/components/ui/textarea'
 import checkJson from '@/lib/utils/checkJson'
 import { FormEvent, useState } from 'react'
 
@@ -11,7 +12,7 @@ type ConvertNull = 'null' | 'string' | 'number' | 'integer' | 'boolean'
 
 export default function Home() {
   const [inputValue, setInputValue] = useState<string>('')
-  const [outputValue, setOutputValue] = useState<string>('')
+  const [outputValue, setOutputValue] = useState<object>([])
   const [convertNull, setConvertNull] = useState<ConvertNull>('null')
   const [addExamples, setAddExamples] = useState(false)
   const [integerToNumber, setIntegerToNumber] = useState(false)
@@ -19,11 +20,13 @@ export default function Home() {
 
   function handleSubmit(event: FormEvent) {
     event.preventDefault()
-    setOutputValue(inputValue)
     console.log(convertNull)
 
     const output = checkJson(inputValue)
-    setOutputValue(output)
+    
+    if (output) {
+      setOutputValue(output)
+    }
   }
   
   return (
@@ -87,8 +90,17 @@ export default function Home() {
           <div className='flex gap-6'>
             <div className='w-full'>
               <h3 className='mb-2'>Input:</h3>
-              <Textarea
+              <CodeEditor
+                style={{
+                  height: 600,
+                  background: 'none',
+                  color: 'black',
+                  border: '1px solid #ccc',
+                  borderRadius: '0.5rem',
+                }}
+                placeholder="Please enter JSON code."
                 value={inputValue}
+                language='json'
                 onChange={(e) => setInputValue(e.target.value)}
                 className='resize-none'
                 rows={30}
@@ -96,10 +108,17 @@ export default function Home() {
             </div>
             <div className='w-full'>
               <h3 className='mb-2'>Output:</h3>
-              <Textarea
+              <JsonView
                 value={outputValue}
                 className='resize-none'
-                rows={30}
+                style={{
+                  height: 600,
+                  background: 'none',
+                  color: 'black',
+                  border: '1px solid #ccc',
+                  borderRadius: '0.5rem',
+                  padding: 10
+                }}
               />
             </div>
           </div>
