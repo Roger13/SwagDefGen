@@ -1,3 +1,5 @@
+import { ConvertNullToType } from '@/@types/convertNullToType'
+
 interface SwaggerDefinition {
   [key: string]: {
     type: string;
@@ -10,7 +12,11 @@ interface SwaggerDefinition {
   };
 }
 
-export function jsonToSwagger(jsonData: any, integerToNumber: boolean): string {
+export function jsonToSwagger(
+  jsonData: any,
+  integerToNumber: boolean,
+  convertNullToType: ConvertNullToType
+): string {
   const swaggerDefinition: SwaggerDefinition = {}
 
   function processObject(obj: any): SwaggerDefinition {
@@ -69,7 +75,7 @@ export function jsonToSwagger(jsonData: any, integerToNumber: boolean): string {
   for (const key in jsonData) {
     if (jsonData[key] === null) {
       swaggerDefinition[key] = {
-        type: 'boolean',
+        type: convertNullToType,
         format: 'nullable'
       }
     } else if (typeof jsonData[key] === 'object' && !Array.isArray(jsonData[key])) {

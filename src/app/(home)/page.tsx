@@ -9,8 +9,7 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrig
 import { FormEvent, useState } from 'react'
 import checkJson from '@/lib/utils/checkJson'
 import { jsonToSwagger } from '@/lib/utils/jsonToSwagger'
-
-type ConvertNullToType = 'string' | 'number' | 'integer' | 'boolean'
+import { ConvertNullToType } from '@/@types/convertNullToType'
 
 export default function Home() {
   const [convertNullToType, setConvertNullToType]
@@ -21,14 +20,12 @@ export default function Home() {
   const [integerToNumber, setIntegerToNumber] = useState(false)
   const [outputYalm, setOutputYalm] = useState(false)
 
-
-
   function handleSubmit(event: FormEvent) {
     event.preventDefault()
     const inputJson = checkJson(inputValue)
     
     if (inputJson) {
-      const output = jsonToSwagger(inputJson, integerToNumber)
+      const output = jsonToSwagger(inputJson, integerToNumber, convertNullToType)
       setOutputValue(JSON.parse(output))
     }
   }
@@ -46,20 +43,23 @@ export default function Home() {
         </header>
         <form onSubmit={handleSubmit}>
           <div className='flex gap-6 my-6 space-y-2'>
-            <Select onValueChange={(value: ConvertNullToType) => setConvertNullToType(value)}>
-              <SelectTrigger className="w-full max-w-xs">
-                <SelectValue placeholder="Convert null values to" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Types</SelectLabel>
-                  <SelectItem value="string">String</SelectItem>
-                  <SelectItem value="number">Number</SelectItem>
-                  <SelectItem value="integer">Integer</SelectItem>
-                  <SelectItem value="boolean">Boolean</SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
+            <div className='flex items-center gap-3'>
+              <label className='whitespace-nowrap'>Convert null values to:</label>
+              <Select onValueChange={(value: ConvertNullToType) => setConvertNullToType(value)}>
+                <SelectTrigger className="w-full max-w-xs">
+                  <SelectValue placeholder='Boolean' />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>Types</SelectLabel>
+                    <SelectItem value="string">String</SelectItem>
+                    <SelectItem value="number">Number</SelectItem>
+                    <SelectItem value="integer">Integer</SelectItem>
+                    <SelectItem value="boolean">Boolean</SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </div>
             <div className='space-x-2'>
               <Checkbox
                 id='add-examples'

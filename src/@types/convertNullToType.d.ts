@@ -1,0 +1,1 @@
+export type ConvertNullToType = 'string' | 'number' | 'integer' | 'boolean'
