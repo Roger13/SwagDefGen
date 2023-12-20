@@ -1,76 +1,14 @@
 import { ConvertNullToType } from '@/@types/convertNullToType'
-
-interface SwaggerDefinition {
-  [key: string]: {
-    type: string;
-    format?: string;
-    properties?: SwaggerDefinition;
-    items?: {
-      type: string;
-      properties?: SwaggerDefinition;
-    };
-  };
-}
+import { SwaggerDefinition } from '@/@types/swaggerDefinition'
+import { processObject } from './processObject'
 
 export function jsonToSwagger(
   jsonData: any,
+  convertNullToType: ConvertNullToType,
+  addExamples: boolean,
   integerToNumber: boolean,
-  convertNullToType: ConvertNullToType
 ): string {
   const swaggerDefinition: SwaggerDefinition = {}
-
-  function processObject(obj: any): SwaggerDefinition {
-    const properties: SwaggerDefinition = {}
-    for (const key in obj) {
-      if (typeof obj[key] === 'object' && !Array.isArray(obj[key])) {
-        properties[key] = {
-          type: 'object',
-          properties: processObject(obj[key]),
-        }
-      } else if (Array.isArray(obj[key])) {
-        if (obj[key].length > 0) {
-          const firstElementType = typeof obj[key][0]
-          if (firstElementType === 'object') {
-            properties[key] = {
-              type: 'array',
-              items: {
-                type: 'object',
-                properties: processObject(obj[key][0]),
-              },
-            }
-          } else {
-            properties[key] = {
-              type: 'array',
-              items: { type: firstElementType },
-            }
-          }
-        } else {
-          properties[key] = {
-            type: 'array',
-            items: { type: 'object' },
-          }
-        }
-      } else {
-        properties[key] = { type: typeof obj[key] }
-        if (typeof obj[key] === 'number') {
-          if (integerToNumber) {
-            properties[key] = { type: typeof obj[key] }
-          } else {
-            properties[key] = { type: 'integer' }
-
-            if (obj[key] < 2147483647 && obj[key] > -2147483647) {
-              properties[key].format = 'int32'
-            } else if (Number.isSafeInteger(obj[key])) {
-              properties[key].format = 'int64'
-            } else {
-              properties[key].format = 'unsafe'
-            }
-          }
-        }
-      }
-    }
-    return properties
-  }
 
   for (const key in jsonData) {
     if (jsonData[key] === null) {
@@ -81,7 +19,8 @@ export function jsonToSwagger(
     } else if (typeof jsonData[key] === 'object' && !Array.isArray(jsonData[key])) {
       swaggerDefinition[key] = {
         type: 'object',
-        properties: processObject(jsonData[key]),
+        properties: processObject(jsonData[key], integerToNumber, addExamples),
+
       }
     } else if (Array.isArray(jsonData[key])) {
       if (jsonData[key].length > 0) {
@@ -91,7 +30,7 @@ export function jsonToSwagger(
             type: 'array',
             items: {
               type: 'object',
-              properties: processObject(jsonData[key][0]),
+              properties: processObject(jsonData[key][0], integerToNumber, addExamples),
             },
           }
         } else {
@@ -99,7 +38,7 @@ export function jsonToSwagger(
             type: 'array',
             items: { 
               type: 'object',
-              properties: processObject(jsonData[key][0])
+              properties: processObject(jsonData[key][0], integerToNumber, addExamples)
             },
           }
         }
@@ -108,7 +47,7 @@ export function jsonToSwagger(
           type: 'array',
           items: {
             type: 'object',
-            properties: processObject(jsonData[key][0])
+            properties: processObject(jsonData[key][0], integerToNumber, addExamples)
           },
         }
       }
@@ -127,14 +66,14 @@ export function jsonToSwagger(
         } else {
           swaggerDefinition[key].format = 'unsafe'
         }
+
+        if (addExamples) swaggerDefinition[key].example = jsonData[key]
       }
     } else if (typeof jsonData[key] === 'boolean') {
       swaggerDefinition[key] = { type: 'boolean' }
     } else if (typeof jsonData[key] === 'string') {
       swaggerDefinition[key] = { type: 'string' }
-    } else {
-      swaggerDefinition[key] = { type: 'boolean' }
-      swaggerDefinition[key].format = 'nullable'
+      if (addExamples) swaggerDefinition[key].example = jsonData[key]
     }
   }
 

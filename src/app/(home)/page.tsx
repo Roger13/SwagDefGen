@@ -25,7 +25,7 @@ export default function Home() {
     const inputJson = checkJson(inputValue)
     
     if (inputJson) {
-      const output = jsonToSwagger(inputJson, integerToNumber, convertNullToType)
+      const output = jsonToSwagger(inputJson, convertNullToType, addExamples, integerToNumber)
       setOutputValue(JSON.parse(output))
     }
   }
