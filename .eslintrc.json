@@ -24,6 +24,7 @@
         "no-useless-escape": "off",
         "@typescript-eslint/no-explicit-any": "off",
         "@typescript-eslint/no-loss-of-precision": "off",
+        "react-hooks/exhaustive-deps": "off",
         "indent": [
             "error",
             2
