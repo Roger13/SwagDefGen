@@ -1,8 +1,9 @@
-export default function checkJson(value: string) {
+export default function checkJson(value: string): boolean {
   try {
-    return JSON.parse(value)
+    JSON.parse(value)
+    return true
   } catch (error) {
     alert(`Your JSON is invalid! \n ${error}`)
-    return
+    return false
   }
 }

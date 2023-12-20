@@ -6,7 +6,6 @@ export function processObject(
   integerToNumber?: boolean,
   addExamples?: boolean
 ): SwaggerDefinition {
-  console.log(addExamples)
   const properties: SwaggerDefinition = {}
   for (const key in obj) {
     if (typeof obj[key] === 'object' && !Array.isArray(obj[key])) {
@@ -39,7 +38,7 @@ export function processObject(
       }
     } else {
       properties[key] = { type: typeof obj[key] }
-      if (addExamples) properties[key].example = obj[key]
+      if (addExamples) properties[key].example = [obj[key]]
       if (typeof obj[key] === 'number') {
         if (integerToNumber) {
           properties[key] = { type: 'number' }

@@ -1,15 +1,35 @@
 'use client'
 
+import { FormEvent, useEffect, useState } from 'react'
+
 import CodeEditor from '@uiw/react-textarea-code-editor'
 import JsonView from '@uiw/react-json-view'
-import '@uiw/react-textarea-code-editor/dist.css'
+import { Document } from 'yaml'
+
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { FormEvent, useState } from 'react'
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue
+} from '@/components/ui/select'
+
 import checkJson from '@/lib/utils/checkJson'
 import { jsonToSwagger } from '@/lib/utils/jsonToSwagger'
 import { ConvertNullToType } from '@/@types/convertNullToType'
+
+const style = {
+  height: 600,
+  overflow: 'scroll',
+  background: 'none',
+  color: 'black',
+  border: '1px solid #ccc',
+  borderRadius: '0.5rem',
+}
 
 export default function Home() {
   const [convertNullToType, setConvertNullToType]
@@ -18,16 +38,73 @@ export default function Home() {
   const [outputValue, setOutputValue] = useState<string>('')
   const [addExamples, setAddExamples] = useState(false)
   const [integerToNumber, setIntegerToNumber] = useState(false)
-  const [outputYalm, setOutputYalm] = useState(false)
+  const [outputYaml, setOutputYaml] = useState(false)
 
-  function handleSubmit(event: FormEvent) {
-    event.preventDefault()
-    const inputJson = checkJson(inputValue)
-    
-    if (inputJson) {
-      const output = jsonToSwagger(inputJson, convertNullToType, addExamples, integerToNumber)
-      setOutputValue(JSON.parse(output))
+  useEffect(() => {
+    if (outputYaml) {
+      outputInYaml()
+    } else {
+      outputInJson()
     }
+  }, [addExamples, integerToNumber, outputYaml])
+
+  function checkInputFormat() {
+    const check = checkJson(inputValue)
+    if (check && inputValue.length > 0) {
+      return true
+    }
+    return false
+  }
+
+  function handleSubmit(event?: FormEvent) {
+    event?.preventDefault()
+    
+    if (outputYaml) {
+      outputInYaml()
+    } else {
+      outputInJson()
+    }
+  }
+
+  function outputInYaml() {
+    if (!checkInputFormat()) return
+    const json = JSON.parse(inputValue)
+    const output = JSON.parse(
+      jsonToSwagger(json, convertNullToType, addExamples, integerToNumber)
+    )
+    const doc = new Document()
+    doc.contents = output
+    setOutputValue(doc.toString())
+  }
+
+  function outputInJson() {
+    if (!checkInputFormat()) return
+    const json = JSON.parse(inputValue)
+    const output = jsonToSwagger(
+      json, convertNullToType, addExamples, integerToNumber
+    )
+    setOutputValue(JSON.parse(output))
+  }
+
+  function handleOutputYalmConvert() {
+    setOutputYaml((state) => {
+      const updateValue = !state
+      return updateValue
+    })
+  }
+
+  function handleAddValuesAsExamples() {
+    setAddExamples((state) => {
+      const updatedValue = !state
+      return updatedValue
+    })
+  }
+
+  function handleConvertIntegerToNumber() {
+    setIntegerToNumber((state) => {
+      const updatedValue = !state
+      return updatedValue
+    })
   }
   
   return (
@@ -44,8 +121,12 @@ export default function Home() {
         <form onSubmit={handleSubmit}>
           <div className='flex gap-6 my-6 space-y-2'>
             <div className='flex items-center gap-3'>
-              <label className='whitespace-nowrap'>Convert null values to:</label>
-              <Select onValueChange={(value: ConvertNullToType) => setConvertNullToType(value)}>
+              <label className='whitespace-nowrap'>
+                Convert null values to:
+              </label>
+              <Select onValueChange={
+                (value: ConvertNullToType) => setConvertNullToType(value)
+              }>
                 <SelectTrigger className="w-full max-w-xs">
                   <SelectValue placeholder='Boolean' />
                 </SelectTrigger>
@@ -64,7 +145,7 @@ export default function Home() {
               <Checkbox
                 id='add-examples'
                 checked={addExamples}
-                onCheckedChange={() => setAddExamples(!addExamples)}
+                onCheckedChange={handleAddValuesAsExamples}
               />
               <label htmlFor='add-examples'>
                 Add values as examples
@@ -74,7 +155,7 @@ export default function Home() {
               <Checkbox
                 id='integer-to-number'
                 checked={integerToNumber}
-                onCheckedChange={() => setIntegerToNumber(!integerToNumber)}
+                onCheckedChange={handleConvertIntegerToNumber}
               />
               <label htmlFor='integer-to-number'>
                 Convert integer values to number
@@ -83,8 +164,8 @@ export default function Home() {
             <div className='space-x-2'>
               <Checkbox
                 id='output-yaml'
-                checked={outputYalm}
-                onCheckedChange={() => setOutputYalm(!outputYalm)}
+                checked={outputYaml}
+                onCheckedChange={handleOutputYalmConvert}
               />
               <label htmlFor='output-yalm'>
                 Output as YAML
@@ -95,40 +176,34 @@ export default function Home() {
             <div className='w-full' data-color-mode="light">
               <h3 className='mb-2'>Input:</h3>
               <CodeEditor
-                style={{
-                  height: 600,
-                  background: 'none',
-                  color: 'black',
-                  border: '1px solid #ccc',
-                  borderRadius: '0.5rem',
-                }}
+                style={style}
                 placeholder="Please enter JSON code."
                 value={inputValue}
                 language='json'
                 onChange={(e) => setInputValue(e.target.value)}
                 className='resize-none'
-                rows={30}
               />
             </div>
             <div className='w-full'>
               <h3 className='mb-2'>Output:</h3>
-              <JsonView
-                
-                enableClipboard={false}
-                displayDataTypes={false}
-                displayObjectSize={false}
-                typeof=''
-                value={Object(outputValue)}
-                className='resize-none'
-                style={{
-                  height: 600,
-                  overflow: 'scroll',
-                  background: 'none',
-                  color: 'black',
-                  border: '1px solid #ccc',
-                  borderRadius: '0.5rem',
-                }}
-              />
+              {outputYaml
+                ? (<CodeEditor
+                  style={style}
+                  value={outputValue}
+                  language='yaml'
+                  onChange={(e) => setInputValue(e.target.value)}
+                  className='resize-none'
+                />)
+                : (<JsonView
+                  enableClipboard={false}
+                  displayDataTypes={false}
+                  displayObjectSize={false}
+                  typeof=''
+                  value={Object(outputValue)}
+                  className='resize-none'
+                  style={style}
+                />)
+              }
             </div>
           </div>
           <div className='flex my-6 w-full justify-end items-center'>
