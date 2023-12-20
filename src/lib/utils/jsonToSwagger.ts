@@ -1,6 +1,7 @@
 import { ConvertNullToType } from '@/@types/convertNullToType'
 import { SwaggerDefinition } from '@/@types/swaggerDefinition'
 import { processObject } from './processObject'
+import { checkNumberFormat } from './checkNumberFormat'
 
 export function jsonToSwagger(
   jsonData: any,
@@ -20,7 +21,6 @@ export function jsonToSwagger(
       swaggerDefinition[key] = {
         type: 'object',
         properties: processObject(jsonData[key], integerToNumber, addExamples),
-
       }
     } else if (Array.isArray(jsonData[key])) {
       if (jsonData[key].length > 0) {
@@ -56,19 +56,9 @@ export function jsonToSwagger(
         swaggerDefinition[key] = { type: 'number' }
       } else {
         swaggerDefinition[key] = { type: 'integer' }
-        
-        const int32Conditional = jsonData[key] < 2147483647 && jsonData[key] > -2147483647
-
-        if (int32Conditional) {
-          swaggerDefinition[key].format = 'int32'
-        } else if (Number.isSafeInteger(jsonData[key])) {
-          swaggerDefinition[key].format = 'int64'
-        } else {
-          swaggerDefinition[key].format = 'unsafe'
-        }
-
-        if (addExamples) swaggerDefinition[key].example = jsonData[key]
+        swaggerDefinition[key].format = checkNumberFormat(jsonData[key])
       }
+      if (addExamples) swaggerDefinition[key].example = jsonData[key]
     } else if (typeof jsonData[key] === 'boolean') {
       swaggerDefinition[key] = { type: 'boolean' }
     } else if (typeof jsonData[key] === 'string') {

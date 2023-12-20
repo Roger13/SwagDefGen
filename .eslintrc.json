@@ -23,6 +23,7 @@
         "react/react-in-jsx-scope": "off",
         "no-useless-escape": "off",
         "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/no-loss-of-precision": "off",
         "indent": [
             "error",
             2

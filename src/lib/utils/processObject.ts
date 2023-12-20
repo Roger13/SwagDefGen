@@ -1,11 +1,12 @@
 import { SwaggerDefinition } from '@/@types/swaggerDefinition'
+import { checkNumberFormat } from './checkNumberFormat'
 
 export function processObject(
   obj: any,
   integerToNumber?: boolean,
   addExamples?: boolean
 ): SwaggerDefinition {
-  
+  console.log(addExamples)
   const properties: SwaggerDefinition = {}
   for (const key in obj) {
     if (typeof obj[key] === 'object' && !Array.isArray(obj[key])) {
@@ -38,19 +39,13 @@ export function processObject(
       }
     } else {
       properties[key] = { type: typeof obj[key] }
+      if (addExamples) properties[key].example = obj[key]
       if (typeof obj[key] === 'number') {
         if (integerToNumber) {
-          properties[key] = { type: typeof obj[key] }
+          properties[key] = { type: 'number' }
         } else {
           properties[key] = { type: 'integer' }
-
-          if (obj[key] < 2147483647 && obj[key] > -2147483647) {
-            properties[key].format = 'int32'
-          } else if (Number.isSafeInteger(obj[key])) {
-            properties[key].format = 'int64'
-          } else {
-            properties[key].format = 'unsafe'
-          }
+          properties[key].format = checkNumberFormat(obj[key])
         }
       }
     }
