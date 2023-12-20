@@ -52,7 +52,7 @@ export function jsonToSwagger(
         }
       }
     } else if (typeof jsonData[key] === 'number') {
-      if (integerToNumber) {
+      if (integerToNumber || !Number.isInteger(jsonData[key])) {
         swaggerDefinition[key] = { type: 'number' }
       } else {
         swaggerDefinition[key] = { type: 'integer' }
