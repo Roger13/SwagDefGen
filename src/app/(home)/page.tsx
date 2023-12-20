@@ -30,7 +30,6 @@ export default function Home() {
     if (inputJson) {
       const output = jsonToSwagger(inputJson, integerToNumber)
       setOutputValue(JSON.parse(output))
-      console.log(JSON.parse(output))
     }
   }
   

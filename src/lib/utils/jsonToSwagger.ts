@@ -45,20 +45,9 @@ export function jsonToSwagger(jsonData: any, integerToNumber: boolean): string {
           }
         }
       } else {
-        if (typeof obj[key] === 'number') {
-          if (integerToNumber) {
-            properties[key] = { type: typeof obj[key] }
-          } else {
-            properties[key] = { type: 'integer' }
-
-            if (obj[key] < 2147483647 && obj[key] > -2147483647) {
-              properties[key].format = 'int32'
-            } else if (Number.isSafeInteger(obj[key])) {
-              properties[key].format = 'int64'
-            } else {
-              properties[key].format = 'unsafe'
-            }
-          }
+        properties[key] = { type: typeof obj[key] }
+        if (typeof obj[key] === 'number' && Number.isInteger(obj[key])) {
+          properties[key].format = 'int32'
         }
       }
     }
@@ -66,7 +55,12 @@ export function jsonToSwagger(jsonData: any, integerToNumber: boolean): string {
   }
 
   for (const key in jsonData) {
-    if (typeof jsonData[key] === 'object' && !Array.isArray(jsonData[key])) {
+    if (jsonData[key] === null) {
+      swaggerDefinition[key] = {
+        type: 'boolean',
+        format: 'nullable'
+      }
+    } else if (typeof jsonData[key] === 'object' && !Array.isArray(jsonData[key])) {
       swaggerDefinition[key] = {
         type: 'object',
         properties: processObject(jsonData[key]),
