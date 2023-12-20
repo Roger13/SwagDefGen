@@ -1,19 +1,19 @@
 'use client'
 
 import { FormEvent, useEffect, useState } from 'react'
-
 import { Document } from 'yaml'
+import { ConvertNullToType } from '@/@types/convertNullToType'
 
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 
-import checkJson from '@/lib/utils/checkJson'
-import { jsonToSwagger } from '@/lib/utils/jsonToSwagger'
-import { ConvertNullToType } from '@/@types/convertNullToType'
 import InputBox from '@/components/InputBox'
 import OutputBox from '@/components/OutputBox'
 import ConvertNullSelect from '@/components/ConvertNullSelect'
 import Header from '@/components/Header'
+
+import checkJson from '@/lib/utils/checkJson'
+import { jsonToSwagger } from '@/lib/utils/jsonToSwagger'
 
 export default function Home() {
   const [convertNullToType, setConvertNullToType]
