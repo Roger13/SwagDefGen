@@ -95,7 +95,7 @@ export default function Home() {
                 checked={outputYaml}
                 onCheckedChange={() => setOutputYaml(!outputYaml)}
               />
-              <label htmlFor='output-yalm'>
+              <label htmlFor='output-yaml'>
                 Output as YAML
               </label>
             </div>
